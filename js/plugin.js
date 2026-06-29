@@ -10,13 +10,126 @@ class VideoCompressor {
         this.currentQuality = 90;
         this.pluginPath = '';
         this.ffmpegPath = '';
+        this.presets = [];
+        this.contextMenuTarget = null;
     }
 
     init(plugin) {
         this.pluginPath = plugin.path;
         this.findFfmpeg();
+        this.loadPresets();
+        this.renderPresets();
         this.bindEvents();
         this.loadSelectedFiles();
+    }
+
+    loadPresets() {
+        const defaultPresets = [
+            { width: 900, height: 1600 },
+            { width: 900, height: 1200 }
+        ];
+        
+        try {
+            const saved = localStorage.getItem('videoCompressorPresets');
+            if (saved) {
+                this.presets = JSON.parse(saved);
+            } else {
+                this.presets = defaultPresets;
+                this.savePresets();
+            }
+        } catch (e) {
+            this.presets = defaultPresets;
+        }
+    }
+
+    savePresets() {
+        try {
+            localStorage.setItem('videoCompressorPresets', JSON.stringify(this.presets));
+        } catch (e) {
+            console.error('保存预设失败:', e);
+        }
+    }
+
+    renderPresets() {
+        const container = document.getElementById('presetBtnGroup');
+        const addBtn = document.getElementById('addPresetBtn');
+        
+        container.querySelectorAll('.preset-btn[data-width]').forEach(btn => btn.remove());
+        
+        this.presets.forEach((preset, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'preset-btn';
+            if (preset.width === this.currentWidth && preset.height === this.currentHeight) {
+                btn.classList.add('active');
+            }
+            btn.dataset.width = preset.width;
+            btn.dataset.height = preset.height;
+            btn.dataset.index = index;
+            btn.textContent = `${preset.width}×${preset.height}`;
+            
+            btn.addEventListener('click', (e) => {
+                this.selectPreset(e.currentTarget);
+            });
+            
+            btn.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                this.showContextMenu(e, btn);
+            });
+            
+            container.insertBefore(btn, addBtn);
+        });
+    }
+
+    showContextMenu(e, target) {
+        this.contextMenuTarget = target;
+        const menu = document.createElement('div');
+        menu.className = 'context-menu show';
+        menu.id = 'contextMenu';
+        menu.style.left = e.clientX + 'px';
+        menu.style.top = e.clientY + 'px';
+        
+        const deleteItem = document.createElement('div');
+        deleteItem.className = 'context-menu-item delete';
+        deleteItem.textContent = '删除';
+        deleteItem.addEventListener('click', () => {
+            this.deletePreset();
+            this.hideContextMenu();
+        });
+        
+        menu.appendChild(deleteItem);
+        document.body.appendChild(menu);
+        
+        document.addEventListener('click', this.hideContextMenu.bind(this), { once: true });
+    }
+
+    hideContextMenu() {
+        const menu = document.getElementById('contextMenu');
+        if (menu) {
+            menu.remove();
+        }
+        this.contextMenuTarget = null;
+    }
+
+    deletePreset() {
+        if (!this.contextMenuTarget) return;
+        
+        const index = parseInt(this.contextMenuTarget.dataset.index);
+        if (isNaN(index) || index < 0 || index >= this.presets.length) return;
+        
+        if (this.presets.length <= 1) {
+            this.showNotification('至少保留一个预设');
+            return;
+        }
+        
+        this.presets.splice(index, 1);
+        this.savePresets();
+        this.renderPresets();
+        
+        if (this.contextMenuTarget.classList.contains('active')) {
+            this.currentWidth = this.presets[0].width;
+            this.currentHeight = this.presets[0].height;
+            this.updateCurrentSettings();
+        }
     }
 
     findFfmpeg() {
@@ -101,6 +214,56 @@ class VideoCompressor {
         document.getElementById('compressBtn').addEventListener('click', () => {
             this.startCompression();
         });
+
+        document.getElementById('addPresetBtn').addEventListener('click', () => {
+            this.showAddPresetModal();
+        });
+
+        document.getElementById('modalCancel').addEventListener('click', () => {
+            this.hideAddPresetModal();
+        });
+
+        document.getElementById('modalConfirm').addEventListener('click', () => {
+            this.addPreset();
+        });
+
+        document.getElementById('addPresetModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('addPresetModal')) {
+                this.hideAddPresetModal();
+            }
+        });
+    }
+
+    showAddPresetModal() {
+        document.getElementById('addPresetModal').classList.add('show');
+        document.getElementById('modalWidth').value = '';
+        document.getElementById('modalHeight').value = '';
+        document.getElementById('modalWidth').focus();
+    }
+
+    hideAddPresetModal() {
+        document.getElementById('addPresetModal').classList.remove('show');
+    }
+
+    addPreset() {
+        const width = parseInt(document.getElementById('modalWidth').value);
+        const height = parseInt(document.getElementById('modalHeight').value);
+
+        if (width && height && width >= 100 && height >= 100) {
+            const exists = this.presets.some(p => p.width === width && p.height === height);
+            if (exists) {
+                this.showNotification('该预设已存在');
+                return;
+            }
+
+            this.presets.push({ width, height });
+            this.savePresets();
+            this.renderPresets();
+            this.hideAddPresetModal();
+            this.showNotification(`已添加预设: ${width}×${height}`);
+        } else {
+            this.showNotification('请输入有效的尺寸（最小100px）');
+        }
     }
 
     selectPreset(btn) {

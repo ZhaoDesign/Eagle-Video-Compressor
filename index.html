@@ -172,13 +172,17 @@
         }
 
         .custom-input-btn.apply-btn {
-            background: #14161B;
-            border: 1px solid #202227;
+            background: #0066FF;
+            border: none;
             position: static;
             z-index: auto;
             width: 120px;
             justify-content: center;
-            color: #73767F;
+            color: #FFFFFF;
+        }
+
+        .custom-input-btn.apply-btn:hover {
+            background: #0052CC;
         }
 
         .custom-input {
@@ -508,6 +512,204 @@
                 transform: rotate(360deg);
             }
         }
+
+        .add-preset-btn {
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px 16px;
+            width: 44px;
+            height: 44px;
+            background: #14161B;
+            border: 1px dashed #202227;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Source Han Sans CN';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 20px;
+            line-height: 21px;
+            color: #73767F;
+            flex: none;
+            flex-grow: 0;
+            transition: all 0.2s ease;
+        }
+
+        .add-preset-btn:hover {
+            border-color: #3A3D44;
+            color: #FFFFFF;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 24px;
+            gap: 16px;
+            width: 320px;
+            background: #14161B;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+        }
+
+        .modal-title {
+            font-family: 'Source Han Sans CN';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 24px;
+            color: #FFFFFF;
+            align-self: stretch;
+        }
+
+        .modal-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .modal-label {
+            font-family: 'Source Han Sans CN';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 21px;
+            color: #929394;
+        }
+
+        .modal-input {
+            box-sizing: border-box;
+            padding: 12px;
+            width: 100%;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            font-family: 'Source Han Sans CN';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 21px;
+            color: #FFFFFF;
+            outline: none;
+        }
+
+        .modal-input:focus {
+            border-color: #0066FF;
+        }
+
+        .modal-input::-webkit-outer-spin-button,
+        .modal-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .modal-input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        .modal-btn-group {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            box-sizing: border-box;
+            padding: 12px;
+            height: 44px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Source Han Sans CN';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 21px;
+            transition: all 0.2s ease;
+        }
+
+        .modal-btn.cancel-btn {
+            background: #14161B;
+            border: 1px solid #202227;
+            color: #73767F;
+        }
+
+        .modal-btn.cancel-btn:hover {
+            border-color: #3A3D44;
+        }
+
+        .modal-btn.confirm-btn {
+            background: #0066FF;
+            border: none;
+            color: #FFFFFF;
+        }
+
+        .modal-btn.confirm-btn:hover {
+            background: #0052CC;
+        }
+
+        .context-menu {
+            position: fixed;
+            background: #14161B;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 4px;
+            min-width: 120px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 2000;
+        }
+
+        .context-menu.show {
+            display: block;
+        }
+
+        .context-menu-item {
+            padding: 8px 12px;
+            font-family: 'Source Han Sans CN';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 21px;
+            color: #FFFFFF;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+
+        .context-menu-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .context-menu-item.delete {
+            color: #FF4757;
+        }
+
+        .context-menu-item.delete:hover {
+            background: rgba(255, 71, 87, 0.1);
+        }
     </style>
 </head>
 
@@ -515,9 +717,10 @@
     <div class="content">
         <div class="card">
             <div class="card-title">分辨率预设</div>
-            <div class="btn-group">
+            <div class="btn-group" id="presetBtnGroup">
                 <button class="preset-btn active" data-width="900" data-height="1600">900×1600</button>
                 <button class="preset-btn" data-width="900" data-height="1200">900×1200</button>
+                <button class="add-preset-btn" id="addPresetBtn">+</button>
             </div>
             <div class="custom-group">
                 <span class="custom-label">自定义尺寸</span>
@@ -585,6 +788,23 @@
                     <span class="spinner"></span>
                     <span>正在准备...</span>
                 </div>
+            </div>
+        </div>
+    </div>
+<div class="modal-overlay" id="addPresetModal">
+        <div class="modal-content">
+            <div class="modal-title">添加分辨率预设</div>
+            <div class="modal-input-group">
+                <label class="modal-label">宽度</label>
+                <input type="number" class="modal-input" id="modalWidth" placeholder="宽度" min="100">
+            </div>
+            <div class="modal-input-group">
+                <label class="modal-label">高度</label>
+                <input type="number" class="modal-input" id="modalHeight" placeholder="高度" min="100">
+            </div>
+            <div class="modal-btn-group">
+                <button class="modal-btn cancel-btn" id="modalCancel">取消</button>
+                <button class="modal-btn confirm-btn" id="modalConfirm">确认</button>
             </div>
         </div>
     </div>
