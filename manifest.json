@@ -1,0 +1,16 @@
+{
+    "id": "d15b9b8c-aa71-4823-b283-4c1da6d047b1",
+    "version": "1.0.2",
+    "platform": "mac",
+    "arch": "all",
+    "name": "视频压缩工具",
+    "description": "将视频压缩为指定分辨率，并生成封面图片",
+    "logo": "/logo.png",
+    "keywords": ["视频", "压缩", "封面", "分辨率"],
+    "devTools": false,
+    "main": {
+        "url": "index.html",
+        "width": 640,
+        "height": 613
+    }
+}

@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <script type="text/javascript" src="js/plugin.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Han Sans CN', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            width: 640px;
+            height: 613px;
+            background: #07090F;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .content {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 640px;
+            height: 613px;
+        }
+
+        .card {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 16px;
+            gap: 16px;
+            width: 608px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            flex-shrink: 0;
+        }
+
+        .card-title {
+            width: 576px;
+            height: 24px;
+            font-family: 'Source Han Sans CN';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 24px;
+            color: #FFFFFF;
+            flex: none;
+            order: 0;
+            align-self: stretch;
+            flex-grow: 0;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0px;
+            gap: 16px;
+            width: 576px;
+            height: 44px;
+            flex: none;
+            order: 1;
+            align-self: stretch;
+            flex-grow: 0;
+        }
+
+        .preset-btn, .quality-btn {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding: 12px 16px;
+            gap: 10px;
+            width: 120px;
+            height: 44px;
+            background: #14161B;
+            border: 1px solid #202227;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Source Han Sans CN';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 21px;
+            color: #73767F;
+            flex: none;
+            flex-grow: 0;
+            transition: all 0.2s ease;
+        }
+
+        .preset-btn:hover, .quality-btn:hover {
+            border-color: #3A3D44;
+        }
+
+        .preset-btn.active, .quality-btn.active {
+            background: #0066FF;
+            border: none;
+            color: #FFFFFF;
+        }
+
+        .custom-group {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0px;
+            gap: 12px;
+            width: 576px;
+            flex: none;
+            order: 2;
+            align-self: stretch;
+            flex-grow: 0;
+        }
+
+        .custom-label {
+            font-family: 'Source Han Sans CN';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 21px;
+            color: #929394;
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+        }
+
+        .custom-input-wrapper {
+            position: relative;
+            width: 100px;
+            height: 44px;
+        }
+
+        .custom-input-btn {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 10px 12px;
+            gap: 4px;
+            width: 100px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Source Han Sans CN';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 21px;
+            color: #73767F;
+            flex: none;
+            order: 1;
+            flex-grow: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .custom-input-btn img {
+            width: 16px;
+            height: 16px;
+        }
+
+        .custom-input-btn.apply-btn {
+            background: #14161B;
+            border: 1px solid #202227;
+            position: static;
+            z-index: auto;
+            width: 120px;
+            justify-content: center;
+            color: #73767F;
+        }
+
+        .custom-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 44px;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            font-family: 'Source Han Sans CN';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 21px;
+            color: #FFFFFF;
+            outline: none;
+            z-index: 2;
+            display: none;
+        }
+
+        .custom-input:focus {
+            border-color: #0066FF;
+        }
+
+        .custom-input::-webkit-outer-spin-button,
+        .custom-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .custom-input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        .file-info-box {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            gap: 16px;
+            width: 576px;
+            height: 48px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            flex: none;
+            order: 1;
+            align-self: stretch;
+            flex-grow: 0;
+            transition: all 0.2s ease;
+        }
+
+        .file-info-box.compressing {
+            background: #14161B;
+        }
+
+        .file-info-box.completed {
+            border-color: #2E7D32;
+            background: rgba(46, 125, 50, 0.1);
+        }
+
+        .file-info-content {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0px;
+            gap: 16px;
+            width: auto;
+            height: 24px;
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+        }
+
+        .file-icon {
+            width: 24px;
+            height: 24px;
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .file-icon img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .file-text {
+            font-family: 'Source Han Sans CN';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 21px;
+            color: #929394;
+            flex: none;
+            order: 1;
+            flex-grow: 0;
+        }
+
+        .status-indicator {
+            flex: none;
+            order: 1;
+            flex-grow: 0;
+            display: none;
+        }
+
+        .status-indicator.show {
+            display: block;
+        }
+
+        .status-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(0, 102, 255, 0.3);
+            border-top-color: #0066FF;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .status-check {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-check img {
+            width: 16px;
+            height: 16px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .settings-box {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 12px 16px;
+            gap: 16px;
+            width: 576px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            flex: none;
+            order: 2;
+            align-self: stretch;
+            flex-grow: 0;
+        }
+
+        .settings-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0px;
+            gap: 16px;
+            width: 544px;
+            height: 29px;
+            flex: none;
+            order: 0;
+            align-self: stretch;
+            flex-grow: 0;
+        }
+
+        .setting-tag {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding: 4px 12px;
+            gap: 10px;
+            height: 29px;
+            background: #151F38;
+            border: 1px solid #253A69;
+            border-radius: 8px;
+            font-family: 'Source Han Sans CN';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 21px;
+            color: #436BBD;
+            flex: none;
+            flex-grow: 0;
+        }
+
+        .compress-btn {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding: 12px 16px;
+            gap: 10px;
+            width: 544px;
+            height: 44px;
+            background: #0066FF;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Source Han Sans CN';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 21px;
+            color: #FFFFFF;
+            text-align: center;
+            flex: none;
+            order: 1;
+            align-self: stretch;
+            flex-grow: 0;
+            transition: all 0.2s ease;
+        }
+
+        .compress-btn:hover:not(:disabled) {
+            background: #0052CC;
+        }
+
+        .compress-btn.completing {
+            background: linear-gradient(135deg, #0066FF 0%, #0088FF 100%);
+            animation: btn-shimmer 2s ease-in-out infinite;
+        }
+
+        @keyframes btn-shimmer {
+            0% {
+                background-position: -200% center;
+            }
+            100% {
+                background-position: 200% center;
+            }
+        }
+
+        .compress-btn.completed {
+            background: #14161B;
+            border: 1px solid #202227;
+            color: #73767F;
+            cursor: default;
+        }
+
+        .progress-section {
+            display: none;
+            width: 576px;
+            flex: none;
+            order: 3;
+            align-self: stretch;
+            flex-grow: 0;
+            margin-top: -8px;
+        }
+
+        .progress-section.active {
+            display: block;
+        }
+
+        .progress-container {
+            margin-bottom: 12px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .progress-header .file-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #FFFFFF;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 70%;
+        }
+
+        .progress-header .progress-percent {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0066FF;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #14161B;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #0066FF;
+            width: 0%;
+            border-radius: 3px;
+            transition: width 0.15s ease-out;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: #73767F;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .progress-text .spinner {
+            width: 14px;
+            height: 14px;
+            border: 2px solid #202227;
+            border-top-color: #0066FF;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <div class="card">
+            <div class="card-title">分辨率预设</div>
+            <div class="btn-group">
+                <button class="preset-btn active" data-width="900" data-height="1600">900×1600</button>
+                <button class="preset-btn" data-width="900" data-height="1200">900×1200</button>
+            </div>
+            <div class="custom-group">
+                <span class="custom-label">自定义尺寸</span>
+                <div class="custom-input-wrapper">
+                    <button class="custom-input-btn" id="customWidthBtn">
+                        <img src="icons/ic_宽度.png" alt="宽度">
+                        <span id="customWidthText">宽</span>
+                    </button>
+                    <input type="number" class="custom-input" id="customWidth" placeholder="宽度" min="100">
+                </div>
+                <div class="custom-input-wrapper">
+                    <button class="custom-input-btn" id="customHeightBtn">
+                        <img src="icons/ic_高度.png" alt="高度">
+                        <span id="customHeightText">高</span>
+                    </button>
+                    <input type="number" class="custom-input" id="customHeight" placeholder="高度" min="100">
+                </div>
+                <button class="custom-input-btn apply-btn" id="applyCustom">应用</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">压缩质量预设</div>
+            <div class="btn-group">
+                <button class="quality-btn" data-quality="90">高质量(90%)</button>
+                <button class="quality-btn active" data-quality="70">中质量(70%)</button>
+                <button class="quality-btn" data-quality="50">低质量(50%)</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">操作</div>
+            <div class="file-info-box" id="fileInfoBox">
+                <div class="file-info-content" id="fileInfoContent">
+                    <div class="file-icon">
+                        <img src="icons/ic_文件.png" alt="文件">
+                    </div>
+                    <span class="file-text" id="fileInfoText">请先选择视频文件</span>
+                </div>
+                <div class="status-indicator" id="statusIndicator">
+                    <div class="status-spinner" id="statusSpinner" style="display: none;"></div>
+                    <div class="status-check" id="statusCheck" style="display: none;">
+                        <img src="icons/ic_对勾.png" alt="对勾">
+                    </div>
+                </div>
+            </div>
+            <div class="settings-box" id="currentSettings" style="display: none;">
+                <div class="settings-row">
+                    <span class="setting-tag">分辨率: <span id="settingResolution">900×1600</span></span>
+                    <span class="setting-tag">质量: <span id="settingQuality">70%</span></span>
+                </div>
+                <button class="compress-btn" id="compressBtn" disabled>开始压缩</button>
+            </div>
+            <div id="progressSection" class="progress-section">
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span class="file-name" id="progressFileName">准备中...</span>
+                        <span class="progress-percent" id="progressPercent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+                <div class="progress-text" id="progressText">
+                    <span class="spinner"></span>
+                    <span>正在准备...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
