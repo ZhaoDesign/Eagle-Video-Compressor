@@ -2,10 +2,6 @@
 
 一个用于 Eagle 图片管理软件的视频压缩插件，可以将视频压缩为指定分辨率并自动生成封面图片。
 
-<p align="center">
-    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=A%20modern%20dark-themed%20video%20compression%20tool%20interface%20with%20resolution%20presets%20and%20quality%20options%2C%20clean%20UI%20design&image_size=square" alt="插件界面预览" width="300">
-</p>
-
 ## 功能特性
 
 - **视频压缩**：将视频压缩为指定分辨率，支持多种常见视频格式（MP4、MOV、AVI、MKV、WebM）
