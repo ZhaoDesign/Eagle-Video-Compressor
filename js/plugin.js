@@ -182,8 +182,8 @@ class VideoCompressor {
                     const compressBtn = document.getElementById('compressBtn');
                     compressBtn.disabled = true;
                     compressBtn.textContent = '开始压缩';
-                    compressBtn.classList.remove('completing', 'completed');
-                    document.getElementById('currentSettings').style.display = 'none';
+                    compressBtn.classList.remove('completing');
+                    compressBtn.classList.add('completed');
                 }
             } else {
                 document.getElementById('fileInfoText').textContent = '请先选择视频文件';
@@ -191,8 +191,8 @@ class VideoCompressor {
                 const compressBtn = document.getElementById('compressBtn');
                 compressBtn.disabled = true;
                 compressBtn.textContent = '开始压缩';
-                compressBtn.classList.remove('completing', 'completed');
-                document.getElementById('currentSettings').style.display = 'none';
+                compressBtn.classList.remove('completing');
+                compressBtn.classList.add('completed');
             }
         } catch (error) {
             console.error('获取选中文件失败:', error);
