@@ -7,7 +7,7 @@ class VideoCompressor {
         this.selectedFiles = [];
         this.currentWidth = 900;
         this.currentHeight = 1600;
-        this.currentQuality = 70;
+        this.currentQuality = 90;
         this.pluginPath = '';
         this.ffmpegPath = '';
     }
