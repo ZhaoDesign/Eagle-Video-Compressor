@@ -1,0 +1,56 @@
+# Eagle 视频压缩插件
+
+一个用于 Eagle 图片管理软件的视频压缩插件，可以将视频压缩为指定分辨率并自动生成封面图片。
+
+<p align="center">
+    <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=A%20modern%20dark-themed%20video%20compression%20tool%20interface%20with%20resolution%20presets%20and%20quality%20options%2C%20clean%20UI%20design&image_size=square" alt="插件界面预览" width="300">
+</p>
+
+## 功能特性
+
+- **视频压缩**：将视频压缩为指定分辨率，支持多种常见视频格式（MP4、MOV、AVI、MKV、WebM）
+- **封面生成**：自动为每个视频生成封面图片
+- **分辨率预设**：提供 900×1600、900×1200 两种常用预设，支持自定义尺寸
+- **质量控制**：提供高质量(90%)、中质量(70%)、低质量(50%)三种压缩质量选项
+- **自动导入**：压缩完成后自动将视频和封面添加回 Eagle 库，并保留原有的标签和文件夹信息
+
+## 技术实现
+
+- 使用 FFmpeg 进行视频编解码和封面提取
+- 支持 HEVC (H.265) 编码，压缩效率更高
+- 内置 macOS 版本的 FFmpeg 二进制文件
+
+## 前置条件
+
+- 已安装 Eagle 图片管理软件（[下载 Eagle](https://eagle.cool/)）
+
+## 安装方法
+
+1. 下载插件文件（XXXXX.eagleplugin）
+2. 将插件文件拖拽进Eagle即可安装
+
+## 使用说明
+
+1. 在 Eagle 中选中一个或多个视频文件
+2. 点击插件图标打开压缩界面
+3. 选择分辨率预设或自定义尺寸
+4. 选择压缩质量
+5. 点击「开始压缩」按钮
+6. 等待压缩完成，结果会自动导入到 Eagle 中
+
+## 支持的视频格式
+
+- MP4 (.mp4)
+- MOV (.mov)
+- AVI (.avi)
+- MKV (.mkv)
+- WebM (.webm)
+
+## 版本信息
+
+- 当前版本：1.0.2
+- 支持平台：macOS
+
+## License
+
+MIT License
